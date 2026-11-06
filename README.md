@@ -218,35 +218,6 @@ The same `app.ts` runs unchanged under `npm run dev`, in the tests, and on Verce
 - Helmet security headers, a CORS allow-list and a 100 kB body cap.
 - Internal errors never leak stack traces in production.
 
-## Testing
-
-```bash
-npm test
-```
-
-54 integration tests run against a real in-memory MongoDB (no mocks). They cover:
-
-- **Auth:** cookie flags, user enumeration, rate limiting, tampered tokens, protected routes.
-- **Authorization:** viewer vs admin.
-- **Validation and error shapes.**
-- **Behaviour:** pagination, search, every filter, CRUD, the delete guards, stats maths (including time-zone bucketing).
-- **Query plans:** every list query uses an index.
-
-## Deployment (Vercel)
-
-1. **MongoDB Atlas:**
-   - Create an M0 cluster and a database user.
-   - Under _Network Access_, allow `0.0.0.0/0`. Vercel Functions have no fixed IPs on the free plan.
-   - Pick the AWS region closest to your Vercel function region (e.g. `us-east-1` ↔ `iad1`).
-2. **Vercel:**
-   - _Add New → Project_, import this repo, and leave the framework preset as **Other**. `vercel.json` runs `npm run build` and routes every path to `api/index.js`, which loads the compiled app.
-   - Set the environment variables: `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`. `CLIENT_ORIGIN` is optional.
-3. **Seed once from your machine**, using the production URI:
-   ```bash
-   MONGODB_URI="<atlas-uri>" npm run seed
-   ```
-4. Check `https://<your-api-domain>/health` (live: https://doctor-tracker-api-five.vercel.app/health).
-
 ## Screenshots
 
 UI screenshots (desktop and mobile) are in the [frontend repository's README](https://github.com/OishwaryaRoy/doctor-tracker-web#visual-evidence).
